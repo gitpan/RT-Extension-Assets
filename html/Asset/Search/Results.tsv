@@ -45,23 +45,28 @@
 %# those contributions and any derivatives thereof.
 %#
 %# END BPS TAGGED BLOCK }}}
-<%args>
-$Object
-</%args>
-<div class="add-user">
-<h3><&|/l&>Add a person</&></h3>
-<& SelectRoleType, Object => $Object, Name => "AddRoleMember-User-Type" &>
-<input type="text" name="AddRoleMember-User"
-       data-autocomplete="Users"
-       data-autocomplete-return="Name"
-       placeholder="<% loc("Find a user...") %>">
-</div>
+<%init>
+my $catalog_obj = LoadDefaultCatalog($ARGS{'Catalog'} || '');
+$ARGS{'Catalog'} = $catalog_obj->Id;
 
-<div class="add-group">
-<h3><&|/l&>Add a group</&></h3>
-<& SelectRoleType, Object => $Object, Name => "AddRoleMember-Group-Type" &>
-<input type="text" name="AddRoleMember-Group"
-       data-autocomplete="Groups"
-       data-autocomplete-return="Name"
-       placeholder="<% loc("Find a group...") %>">
-</div>
+my $assets = RT::Assets->new($session{CurrentUser});
+ProcessAssetsSearchArguments(
+    Assets => $assets, Catalog => $catalog_obj, ARGSRef => \%ARGS,
+);
+
+my $Format = q|id, Name, Description, Status, Catalog, |;
+
+$Format .= "$_, " for RT::Asset->Roles;
+
+my $CFs = RT::CustomFields->new( $session{CurrentUser} );
+$CFs->LimitToCatalog( $catalog_obj->Id );
+$Format .= "'__CF.{$_}__/TITLE:$_', " for map {$_ = $_->Name; s/['\\]/\\$1/g; $_} @{$CFs->ItemsArrayRef};
+
+$m->callback(CallbackName => "ModifyFormat", Format => \$Format );
+
+my $comp = "/Asset/Elements/TSVExport";
+$comp = "/Elements/TSVExport" if $m->comp_exists("/Elements/TSVExport");
+
+$m->comp($comp, Collection => $assets, Format => $Format );
+
+</%init>

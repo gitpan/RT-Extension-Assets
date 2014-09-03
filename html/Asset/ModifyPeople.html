@@ -68,13 +68,15 @@
     </table>
   </&>
 
-  <& /Elements/Submit, Label => loc('Save asset'), Name => "Update" &>
+  <& /Elements/Submit, Label => loc('Save'), Name => "Update" &>
 </form>
 </span>
 
 <%init>
 my $asset = LoadAsset($id);
 my @results;
+
+$m->callback( Asset => $asset, ARGSRef => \%ARGS, Update => \$Update, results => \@results );
 
 if ($Update) {
     my $CFs = $asset->CustomFields;

@@ -2,6 +2,7 @@ Changes
 doc/images/asset-cfs.png
 doc/images/asset-date-details.png
 doc/images/asset-search.png
+doc/images/asset-ticket-create-selfservice.png
 doc/images/asset-ticket-create.png
 doc/images/catalog-rights.png
 doc/images/edit-catalog.png
@@ -48,6 +49,7 @@ html/Asset/Elements/ShowLinks
 html/Asset/Elements/ShowPeople
 html/Asset/Elements/ShowRoleMembers
 html/Asset/Elements/ShowSummary
+html/Asset/Elements/TSVExport
 html/Asset/Helpers/CreateInCatalog
 html/Asset/Helpers/CreateLinkedTicket
 html/Asset/History.html
@@ -59,6 +61,7 @@ html/Asset/ModifyLinks.html
 html/Asset/ModifyPeople.html
 html/Asset/Search/Bulk.html
 html/Asset/Search/index.html
+html/Asset/Search/Results.tsv
 html/Callbacks/RT-Extension-Assets/Elements/AddLinks/ExtraLinkInstructions
 html/Callbacks/RT-Extension-Assets/Elements/Tabs/Privileged
 html/Callbacks/RT-Extension-Assets/Elements/Tabs/SelfService
@@ -87,14 +90,17 @@ inc/Module/Install.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
 inc/Module/Install/Fetch.pm
+inc/Module/Install/Include.pm
 inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
 inc/Module/Install/ReadmeFromPod.pm
 inc/Module/Install/RTx.pm
-inc/Module/Install/RTx/Factory.pm
+inc/Module/Install/RTx/Runtime.pm
 inc/Module/Install/Substitute.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
+inc/unicore/Name.pm
+inc/YAML/Tiny.pm
 lib/RT/Asset.pm
 lib/RT/Assets.pm
 lib/RT/Catalog.pm
@@ -110,6 +116,7 @@ META.yml
 patches/rt-4.2.1-4.2.2.patch
 po/assets.pot
 po/en.po
+po/fr.po
 README
 static/css/RTx-Assets.css
 static/js/RTx-Assets.js
@@ -118,6 +125,8 @@ xt/collection.t
 xt/compile.t
 xt/lib/RT/Extension/Assets/Test.pm.in
 xt/links.t
+xt/pod.t
 xt/rights.t
 xt/roles.t
 xt/web.t
+SIGNATURE                                Public-key signature (added by MakeMaker)

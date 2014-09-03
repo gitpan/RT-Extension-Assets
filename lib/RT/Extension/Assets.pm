@@ -50,7 +50,7 @@ use strict;
 use warnings;
 package RT::Extension::Assets;
 
-our $VERSION = '1.0rc2';
+our $VERSION = '1.01_1';
 
 # Loaded so they're available and rights are injected.
 use RT::Catalog;
@@ -257,7 +257,11 @@ RT->AddJavaScript("RTx-Assets.js");
             push @PassArguments, 'SearchAssets';
         }
 
-        my $Format = RT->Config->Get('AssetSearchFormat') || q[
+        my $Format = RT->Config->Get('AssetSearchFormat');
+        $Format = $Format->{$args{'Catalog'}->id}
+            || $Format->{$args{'Catalog'}->Name}
+            || $Format->{''} if ref $Format;
+        $Format ||= q[
             '<b><a href="__WebPath__/Asset/Display.html?id=__id__">__id__</a></b>/TITLE:#',
             '<b><a href="__WebPath__/Asset/Display.html?id=__id__">__Name__</a></b>/TITLE:Name',
             Description,
@@ -393,12 +397,6 @@ To patch RT, run:
 
 RT version 4.2.3 and above already contain this patch.
 
-=item Edit your /opt/rt4/etc/RT_SiteConfig.pm
-
-Add this line:
-
-    Plugin( "RT::Extension::Assets" );
-
 =item make initdb
 
 Only run this the first time you install this module.
@@ -408,6 +406,12 @@ in your database.
 
 If you are upgrading this module, check for upgrading instructions
 in case changes need to be made to your database.
+
+=item Edit your /opt/rt4/etc/RT_SiteConfig.pm
+
+Add this line:
+
+    Plugin( "RT::Extension::Assets" );
 
 =item Configure portlets for RT's Homepage and User Summary
 
@@ -432,12 +436,8 @@ RT_SiteConfig.pm and add UserAssets to the list.
 
 =head1 CONFIGURATION
 
-=head2 C<$DefaultCatalog>
-
-Use this to define the default catalog name that will be used when first
-searching for assets; thereafter, it will default to the last-searched
-catalog. You may use either the catalog's name or its ID. This only
-affects the catalog selection on the asset search interface.
+See L<Assets_Config.pm> for documentation on the available configuration
+parameters.
 
 =head1 USAGE
 

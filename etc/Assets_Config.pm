@@ -26,9 +26,18 @@ lifecycles by their type:
 Set(%Lifecycles,
     assets => {
         type     => "asset",
-        initial  => [ 'new' ],
-        active   => [ 'allocated', 'in-use' ],
-        inactive => [ 'recycled', 'stolen', 'deleted' ],
+        initial  => [ 
+            'new' # loc
+        ],
+        active   => [ 
+            'allocated', # loc
+            'in-use' # loc
+        ],
+        inactive => [ 
+            'recycled', # loc
+            'stolen', # loc
+            'deleted' # loc
+        ],
 
         defaults => {
             on_create => 'new',
@@ -47,13 +56,21 @@ Set(%Lifecycles,
             '* -> *'        => 'ModifyAsset',
         },
         actions => {
-            '* -> allocated' => { label => "Allocate" },
-            '* -> in-use'    => { label => "Now in-use" },
-            '* -> recycled'  => { label => "Recycle" },
-            '* -> stolen'    => { label => "Report stolen" },
+            '* -> allocated' => { 
+                label => "Allocate" # loc
+            },
+            '* -> in-use'    => { 
+                label => "Now in-use" # loc
+            },
+            '* -> recycled'  => { 
+                label => "Recycle" # loc
+            },
+            '* -> stolen'    => { 
+                label => "Report stolen" # loc
+            },
         },
     },
-);
+) unless $Lifecycles{assets};
 
 =item C<@AssetQueues>
 
@@ -64,7 +81,7 @@ the ticket, even when the ticket has no related assets yet.
 
 =cut
 
-Set(@AssetQueues, ());
+# Set(@AssetQueues, ());
 
 =item C<$DefaultCatalog>
 
@@ -90,23 +107,27 @@ Set($AssetSearchFields, {
     id          => '=',
     Name        => 'LIKE',
     Description => 'LIKE',
-});
+}) unless $AssetSearchFields;
 
 =item C<$AssetSearchFormat>
 
-The format that results of the asset search are displayed with.
+The format that results of the asset search are displayed with.  This is
+either a string, which will be used for all catalogs, or a hash
+reference, keyed by catalog's name/id.  If a hashref and neither name or
+id is found therein, falls back to the key ''.
 
 =cut
 
+# loc('Related tickets')
 Set($AssetSearchFormat, q[
     '<a href="__WebHomePath__/Asset/Display.html?id=__id__">__Name__</a>/TITLE:Name',
     Description,
     '__Status__ (__Catalog__)/TITLE:Status',
-    OwnerName,
+    Owner,
     HeldBy,
     Contacts,
     '__ActiveTickets__ __InactiveTickets__/TITLE:Related tickets',
-]);
+]) unless $AssetSearchFormat;
 
 =item C<$AssetSummaryFormat>
 
@@ -120,11 +141,11 @@ Set($AssetSummaryFormat, q[
     '<a href="__WebHomePath__/Asset/Display.html?id=__id__">__Name__</a>/TITLE:Name',
     Description,
     '__Status__ (__Catalog__)/TITLE:Status',
-    OwnerName,
+    Owner,
     HeldBy,
     Contacts,
     '__ActiveTickets__ __InactiveTickets__/TITLE:Related tickets',
-]);
+]) unless $AssetSummaryFormat;
 
 =item C<$AssetSummaryRelatedTicketsFormat>
 
@@ -140,7 +161,7 @@ Set($AssetSummaryRelatedTicketsFormat, q[
     '<a href="__WebPath__/Ticket/Display.html?id=__id__">__Subject__</a>',
     QueueName,
     Status,
-]);
+]) unless $AssetSummaryRelatedTicketsFormat;
 
 =item C<%AdminSearchResultFormat>
 
@@ -155,7 +176,7 @@ Set(%AdminSearchResultFormat,
         q{'<a href="__WebPath__/Admin/Assets/Catalogs/Modify.html?id=__id__">__id__</a>/TITLE:#'}
         .q{,'<a href="__WebPath__/Admin/Assets/Catalogs/Modify.html?id=__id__">__Name__</a>/TITLE:Name'}
         .q{,__Description__,__Lifecycle__,__Disabled__},
-);
+) unless $AdminSearchResultFormat{Catalogs};
 
 =item C<$AssetBasicCustomFieldsOnCreate>
 
@@ -167,7 +188,9 @@ Set( $AssetBasicCustomFieldsOnCreate, [ 'foo', 'bar' ] );
 
 =cut
 
-Set($AssetBasicCustomFieldsOnCreate, undef );
+# Set($AssetBasicCustomFieldsOnCreate, undef );
+
+
 
 =back
 
